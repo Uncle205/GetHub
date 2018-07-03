@@ -1,0 +1,75 @@
+Alter table patient2
+add constraint birth check(birth<date_ill)
+
+Alter table hospital
+add constraint date_ill check(date_ill<getdate())
+
+
+Alter table patient2
+add constraint family check(family =1 or family =2)
+
+Alter table patient2
+add constraint educaation check(education =1 or education =2 or education=3)
+
+Alter table hospital
+add constraint date_ill check(date_ill>date_well and date_ill>=date_come and date_ill<=getdate())
+
+Alter table patient2
+add constraint salary check(salary>=min_salary)
+
+alter table work
+add ind_vuln int
+Alter table work
+add constraint ind_vuln check(ind_vuln=1 or ind_vuln=2 or ind_vuln=3)
+
+Alter table patient2
+add constraint salary check (min_salary = 2000)
+
+create nonclustered index Recovering 
+on hospital (date_ill, date_well)
+
+
+create clustered index NameWork
+on work (name)
+
+create view Myview as
+select p.name, e.name, w name
+from Work w, education e, Patient2 p
+where w.work_id=p.work_id
+and e.education_id=p.education_id
+
+Create View MuView2 as 
+select p.Birthday, p.name, p.salary, p.position, p.children, p.study 
+from PAtient 2 p, Hospital h
+where h.person_id = p.id
+and h.date_ill = '2018-01-24'
+and h.ill_end = '2018-02-13'
+
+Create View MuView3 as 
+select p.Birthday, p.name, p.salary, p.position, p.children, p.study 
+from Patient2 p, Hospital h
+where h.person_id = p.id
+and ill_end like '%-03-%' and ill_end like '%-06-%' and ill_end like '%-09-%' and ill_end like '%-12-%'
+
+Create Procedure Transact(
+@person_name varchar(50), @place_name varchar(50) 
+) as
+select @person_name = p.name, @place_name = w.name
+from Patient2 p, Work w
+if (@person_name = p.name and @place_name = w.name) 
+begin 
+raiserror('empty',0,1) 
+Rollback transaction
+end 
+else 
+Begin
+transaction
+p.work_id = w.work_id from Person p, Work w
+end 
+
+Create Procedure proc2 as
+select p.salary - (p.salary / 100 * 20) + (p.salary / 100 * 10)
+from Patient2 p
+
+
+
